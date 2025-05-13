@@ -543,6 +543,7 @@ export default {
   position: relative;
   z-index: 2;
   min-height: 0;
+  padding-top: 120px;
 }
 
 .message-row {
