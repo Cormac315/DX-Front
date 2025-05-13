@@ -299,8 +299,30 @@ export default {
       this.saveProject()
     },
     onReport() {
-      // TODO: 生成报告逻辑
-      this.$message.success('生成报告功能待实现')
+      // 导出对话记录为log文件
+      if (!this.messages.length) {
+        this.$message.warning('暂无对话记录可导出')
+        return
+      }
+      const lines = this.messages.map((msg, idx) => {
+        const role = msg.type === 'user' ? '用户' : '系统';
+        return `[${role}] ${msg.content}`;
+      });
+      const logContent = lines.join('\n');
+      const blob = new Blob([logContent], { type: 'text/plain' });
+      const fileName = `${this.title || '项目'}-对话记录.log`;
+      if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(blob, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      }
+      this.$message.success({ message: '报告已下载', duration: 1200 });
     },
     toggleToolbar() {
       this.isToolbarCollapsed = !this.isToolbarCollapsed
