@@ -1,6 +1,6 @@
 # 洞玄系统前端页面
 
-## 部署
+## 本地部署
 
 克隆本仓库
 
@@ -8,7 +8,7 @@
 git clone https://github.com/Cormac315/DX-Front
 ```
 
-运行服务器
+安装依赖并运行
 
 ```bash
 cd DX-Front
