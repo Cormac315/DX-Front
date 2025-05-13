@@ -74,8 +74,6 @@
           v-for="(message, index) in messages"
           :key="index"
           :class="['message-row', message.type === 'user' ? 'user-row' : 'bot-row']"
-          @mouseenter="hoveredIndex = index"
-          @mouseleave="hoveredIndex = null"
         >
           <div class="avatar-wrapper">
             <div class="avatar">
@@ -99,8 +97,19 @@
               </template>
             </div>
           </div>
-          <div class="bubble-block">
-            <div class="bubble" :class="message.type === 'user' ? 'user-bubble' : 'bot-bubble'">
+          <div
+            class="bubble-block"
+            :class="message.type === 'user' ? 'bubble-block-reverse' : 'bubble-block-normal'"
+          >
+            <div 
+              class="bubble" 
+              :class="[
+                message.type === 'user' ? 'user-bubble' : 'bot-bubble',
+                hoveredIndex === index ? 'bubble-hovered' : ''
+              ]"
+              @mouseenter="hoveredIndex = index"
+              @mouseleave="hoveredIndex = null"
+            >
               {{ message.content }}
             </div>
             <div
@@ -564,20 +573,20 @@ export default {
 
 .bubble-block {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1;
+  align-items: center;
+  width: 100%;
 }
-
-.user-row .bubble-block {
-  align-items: flex-end;
+.bubble-block-reverse {
+  flex-direction: row-reverse;
 }
-
-.bubble {
-  max-width: 70%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  word-break: break-word;
+.bubble-block-normal {
+  flex-direction: row;
+}
+.bubble-actions {
+  margin: 0 8px;
+  display: flex;
+  gap: 8px;
+  position: relative;
 }
 
 .user-row {
@@ -600,20 +609,6 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.bubble-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 6px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-
-.message-row:hover .bubble-actions {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .ds-input-bar {
@@ -791,5 +786,23 @@ export default {
 :deep(.ds-input .el-textarea__inner)::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 6px;
+}
+
+/* 高亮气泡样式 */
+.bubble-hovered {
+  box-shadow: 0 0 0 3px #409EFF;
+  transition: box-shadow 0.2s;
+}
+
+.bubble {
+  max-width: 70%;
+  min-width: 60px;
+  width: fit-content;
+  padding: 12px 16px;
+  border-radius: 12px;
+  word-break: break-word;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: block;
 }
 </style> 
