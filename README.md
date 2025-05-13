@@ -3,7 +3,10 @@
 ## 部署
 
 克隆本仓库
-`git clone https://github.com/Cormac315/DX-Front`
+
+```bash
+git clone https://github.com/Cormac315/DX-Front
+```
 
 运行服务器
 
