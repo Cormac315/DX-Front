@@ -100,6 +100,8 @@
           <div
             class="bubble-block"
             :class="message.type === 'user' ? 'bubble-block-reverse' : 'bubble-block-normal'"
+            @mouseenter="hoveredIndex = index"
+            @mouseleave="hoveredIndex = null"
           >
             <div 
               class="bubble" 
@@ -107,8 +109,6 @@
                 message.type === 'user' ? 'user-bubble' : 'bot-bubble',
                 hoveredIndex === index ? 'bubble-hovered' : ''
               ]"
-              @mouseenter="hoveredIndex = index"
-              @mouseleave="hoveredIndex = null"
             >
               {{ message.content }}
             </div>
