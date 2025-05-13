@@ -7,19 +7,19 @@
       <div
         class="dynamic-island"
         :class="{ collapsed: isIslandCollapsed }"
-        @mouseenter="isIslandCollapsed = false"
+        @mouseenter="isIslandCollapsed = false; showCollapsedIsland = false"
         @mouseleave="isIslandCollapsed = true"
       >
-        <div v-if="isIslandCollapsed" class="island-collapsed">
+        <div v-if="isIslandCollapsed && showCollapsedIsland" class="island-collapsed">
           <svg width="38" height="18" viewBox="0 0 38 18" fill="none">
             <rect x="1" y="1" width="36" height="16" rx="8" fill="#222" fill-opacity="0.85" stroke="#409EFF" stroke-width="2"/>
             <circle cx="19" cy="9" r="4" fill="#409EFF" fill-opacity="0.7"/>
           </svg>
         </div>
-        <transition name="island-expand">
+        <transition name="island-expand" @after-enter="showIslandActions = true" @before-leave="showIslandActions = false" @after-leave="showCollapsedIsland = true">
           <div v-show="!isIslandCollapsed" class="island-content">
             <el-input v-model="title" class="island-title-input" size="large" :maxlength="40" />
-            <div class="island-actions">
+            <div class="island-actions" :class="{ 'island-actions-visible': showIslandActions }">
               <el-tooltip :content="running ? '终止' : '初始化'" placement="bottom">
                 <el-button class="action-btn" @click="running ? onTerminate() : onInit()" circle>
                   <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
@@ -210,7 +210,9 @@ export default {
       selectedFiles: [],
       hoveredIndex: null,
       isIslandCollapsed: true,
-      running: false
+      running: false,
+      showCollapsedIsland: true,
+      showIslandActions: false
     }
   },
   created() {
@@ -560,6 +562,14 @@ export default {
   display: flex;
   gap: 12px;
   align-items: center;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.35s 0.03s cubic-bezier(.4,0,.2,1), transform 0.35s 0.03s cubic-bezier(.4,0,.2,1);
+}
+
+.island-actions.island-actions-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .action-btn {

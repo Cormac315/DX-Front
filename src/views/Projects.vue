@@ -15,9 +15,9 @@
         </svg>
         删除所有项目
       </button>
-      <el-button type="primary" @click="loadProjects" size="small" class="refresh-btn header-btn">
+      <el-button type="primary" @click="loadProjects(true)" size="small" class="refresh-btn header-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="margin-right:4px;">
-          <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V7c1.93 0 3.68.78 4.95 2.05A7 7 0 1 1 5 12H3a9 9 0 1 0 14.65-5.65z" fill="#fff"/>
+          <path d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V7c1.93 0 3.68.78 4.95 2.05A7 7 0 1 1 5 12H3a9 9 0 1 0 14.65-5.65z" fill="currentColor"/>
         </svg>
         刷新
       </el-button>
@@ -76,8 +76,11 @@ export default {
     this.loadProjects()
   },
   methods: {
-    loadProjects() {
+    loadProjects(showMsg = false) {
       this.projects = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').sort((a, b) => b.updateTime - a.updateTime)
+      if (showMsg) {
+        this.$message.success({ message: '已刷新', duration: 1000 })
+      }
     },
     openProject(id) {
       this.$router.push({ path: '/', query: { projectId: id } })
@@ -148,12 +151,12 @@ export default {
 .projects-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .header-btn {
   height: 38px;
-  min-width: 90px;
+  min-width: 110px;
   padding: 0 16px;
   font-size: 15px;
   display: flex;
@@ -165,7 +168,6 @@ export default {
 }
 
 .new-project-btn {
-  margin-left: 8px;
   background: #fff;
   border: 1.5px solid #67c23a;
   color: #67c23a;
@@ -182,7 +184,6 @@ export default {
 }
 
 .delete-all-btn {
-  margin-left: 8px;
   background: #fff;
   border: 1.5px solid #f56c6c;
   color: #f56c6c;
@@ -197,8 +198,8 @@ export default {
 }
 
 .refresh-btn {
-  background: #409EFF;
-  color: #fff;
+  background: #fff;
+  color: #409EFF;
   border: 1.5px solid #409EFF;
   transition: background 0.2s, color 0.2s, border 0.2s;
   display: flex;
@@ -206,7 +207,7 @@ export default {
   gap: 4px;
   font-size: 15px;
   height: 38px;
-  min-width: 90px;
+  min-width: 110px;
   padding: 0 16px;
   border-radius: 6px;
   box-sizing: border-box;
@@ -217,8 +218,8 @@ export default {
   vertical-align: middle;
 }
 .refresh-btn:hover {
-  background: #66b1ff;
-  color: #fff;
+  background: #f0f6ff;
+  color: #409EFF;
   border-color: #66b1ff;
 }
 
