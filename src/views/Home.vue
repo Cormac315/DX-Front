@@ -20,17 +20,11 @@
           <div v-show="!isIslandCollapsed" class="island-content">
             <el-input v-model="title" class="island-title-input" size="large" :maxlength="40" />
             <div class="island-actions">
-              <el-tooltip content="初始化" placement="bottom">
-                <el-button class="action-btn" @click="onInit" circle>
+              <el-tooltip :content="running ? '终止' : '初始化'" placement="bottom">
+                <el-button class="action-btn" @click="running ? onTerminate() : onInit()" circle>
                   <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                    <polygon points="8,6 18,12 8,18" fill="#409EFF"/>
-                  </svg>
-                </el-button>
-              </el-tooltip>
-              <el-tooltip content="终止任务" placement="bottom">
-                <el-button class="action-btn" @click="onTerminate" circle>
-                  <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                    <rect x="6" y="6" width="12" height="12" rx="2" fill="#faad14"/>
+                    <polygon v-if="!running" points="8,6 18,12 8,18" fill="#409EFF"/>
+                    <rect v-else x="6" y="6" width="12" height="12" rx="2" fill="#faad14"/>
                   </svg>
                 </el-button>
               </el-tooltip>
@@ -65,6 +59,10 @@
                   </span>
                 </el-button>
               </el-tooltip>
+              <div class="island-status-wrapper">
+                <span class="island-status-label">状态：</span>
+                <span class="island-status-indicator" :class="running ? 'running' : 'terminated'" :title="running ? '进行中' : '终止'" />
+              </div>
             </div>
           </div>
         </transition>
@@ -211,7 +209,8 @@ export default {
       },
       selectedFiles: [],
       hoveredIndex: null,
-      isIslandCollapsed: true
+      isIslandCollapsed: true,
+      running: false
     }
   },
   created() {
@@ -271,6 +270,12 @@ export default {
       this.showInitDialog = true
     },
     confirmInit() {
+      // 初始化前检查是否有其他运行中项目
+      let projects = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+      if (projects.some(p => p.running && p.id !== this.projectId)) {
+        this.$message.warning('同一时间只允许一个项目进行中，请先终止其他项目！')
+        return
+      }
       const name = this.targetInfo.name || '';
       const ip = this.targetInfo.ip || '';
       if (!name.trim()) {
@@ -283,12 +288,15 @@ export default {
       }
       // 可以根据需要添加更多校验
       this.inited = true
+      this.running = true
       this.showInitDialog = false
-      this.$message.success('初始化成功')
+      this.$message.success({ message: '初始化成功', duration: 1000 })
+      this.saveProject()
     },
     onTerminate() {
-      // TODO: 终止任务逻辑
-      this.$message.warning('终止任务功能待实现')
+      this.running = false
+      this.$message.warning('任务已终止')
+      this.saveProject()
     },
     onReport() {
       // TODO: 生成报告逻辑
@@ -313,7 +321,8 @@ export default {
         inputMessage: this.inputMessage || '',
         updateTime: Date.now(),
         inited: this.inited,
-        targetInfo: this.targetInfo
+        targetInfo: this.targetInfo,
+        running: this.running
       }
       if (idx >= 0) {
         projects[idx] = project
@@ -332,6 +341,7 @@ export default {
         this.inputMessage = p.inputMessage || ''
         this.projectId = p.id
         this.inited = p.inited || false
+        this.running = p.running || false
         this.targetInfo = p.targetInfo || {
           name: '',
           ip: '',
@@ -527,6 +537,7 @@ export default {
 .island-actions {
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
 .action-btn {
@@ -823,5 +834,59 @@ export default {
   pointer-events: none;
   user-select: none;
   line-height: 1.6;
+}
+
+.status-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: 2px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.status-running {
+  background: #409EFF;
+  border-color: #409EFF;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.island-status-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}
+
+.island-status-label {
+  color: #fff;
+  font-size: 15px;
+  margin-right: 4px;
+}
+
+.island-status-indicator {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f56c6c;
+  border: 2px solid #fff;
+  transition: background 0.2s;
+}
+
+.island-status-indicator.running {
+  background: #67c23a;
+}
+
+.island-status-indicator.terminated {
+  background: #f56c6c;
 }
 </style> 

@@ -30,12 +30,20 @@
         <el-card class="project-card" @click="openProject(project.id)" shadow="hover">
           <template #header>
             <div class="card-header">
-              <span>{{ project.title }}</span>
+              <div class="header-title">
+                <span class="project-title">{{ project.title }}</span>
+              </div>
               <el-tag size="small">{{ formatTime(project.updateTime) }}</el-tag>
             </div>
           </template>
           <div class="project-info">
-            <p>对话数：{{ project.messages?.length || 0 }}</p>
+            <p>
+              对话数：{{ project.messages?.length || 0 }}
+              <span class="status-label">状态：</span>
+              <span class="status-text" :class="{ 'status-running': project.running, 'status-terminated': !project.running }">
+                {{ project.running ? '进行中' : '终止' }}
+              </span>
+            </p>
           </div>
         </el-card>
         <button class="delete-abs-btn" @click.stop="confirmDelete(project.id)" title="删除项目">
@@ -75,6 +83,12 @@ export default {
       this.$router.push({ path: '/', query: { projectId: id } })
     },
     goHome() {
+      // 新建前检查是否已有运行中项目
+      let projects = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+      if (projects.some(p => p.running)) {
+        this.$message.warning('同一时间只允许一个项目进行中，请先终止其他项目！')
+        return
+      }
       // 新建一个空项目并跳转
       const d = new Date()
       const title = `Project_${d.getMonth()+1}_${d.getDate()}_${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
@@ -92,7 +106,6 @@ export default {
           services: ''
         }
       }
-      let projects = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
       projects.push(newProject)
       localStorage.setItem(STORAGE_KEY, JSON.stringify(projects))
       localStorage.setItem('pentest-chat-last', id)
@@ -234,6 +247,43 @@ export default {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-label {
+  font-size: 16px;
+  color: #666;
+  margin-left: 16px;
+}
+
+.project-title {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.status-text {
+  font-size: 16px;
+  color: #f56c6c;
+  font-weight: 500;
+}
+
+.status-text.status-running {
+  color: #67c23a;
+}
+
+.status-text.status-terminated {
+  color: #f56c6c;
 }
 
 .delete-abs-btn {
