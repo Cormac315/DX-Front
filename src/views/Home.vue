@@ -175,6 +175,10 @@
         </template>
       </el-dialog>
     </div>
+    <div class="footer-tip">
+      内容由AI生成，请注意甄别<br>
+      Copyright © 2025 Cormac All Rights Reserved.
+    </div>
   </div>
 </template>
 
@@ -805,5 +809,19 @@ export default {
   box-sizing: border-box;
   flex-shrink: 0;
   display: block;
+}
+
+.footer-tip {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  text-align: center;
+  color: #b0b0b0;
+  font-size: 14px;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1.6;
 }
 </style> 
