@@ -636,12 +636,19 @@ export default {
   height: auto;
   min-height: unset;
   overflow: visible;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.ds-input-bar:focus-within {
+  transform: translateY(-60px);
+}
+
 .ds-input-row {
   display: flex;
   width: 100%;
   position: relative;
 }
+
 .ds-input {
   flex: 1;
   border: none;
@@ -650,17 +657,18 @@ export default {
   font-size: 16px;
   color: #222;
   line-height: 1.6;
-  width: 100%;
 }
+
 .ds-btn-group {
-  position: absolute;
-  right: 0;
-  bottom: 0;
   display: flex;
   align-items: flex-end;
   gap: 6px;
   padding: 0 2px 2px 0;
+  z-index: 21;
+  transition: none;
+  margin-left: 24px;
 }
+
 .icon-btn {
   background: #fff;
   border: none;
@@ -676,14 +684,17 @@ export default {
   font-size: 16px;
   color: #409EFF;
 }
+
 .icon-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 .icon-btn:hover:not(:disabled) {
   background: #f0f6ff;
   box-shadow: 0 4px 16px rgba(64, 158, 255, 0.10);
 }
+
 .file-list {
   position: absolute;
   left: 32px;
@@ -701,11 +712,13 @@ export default {
   flex-direction: column;
   gap: 4px;
 }
+
 .file-item {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .remove-file {
   color: #f56c6c;
   font-weight: bold;
@@ -714,9 +727,11 @@ export default {
   font-size: 16px;
   transition: color 0.2s;
 }
+
 .remove-file:hover {
   color: #d32f2f;
 }
+
 .delete-btn {
   margin-left: 8px;
   background: #fff;
@@ -725,10 +740,12 @@ export default {
   box-shadow: 0 2px 8px 0 rgba(245,108,108,0.08);
   transition: background 0.2s, color 0.2s;
 }
+
 .delete-btn:hover {
   background: #fde2e2;
   color: #f56c6c;
 }
+
 .delete-svg-icon {
   display: flex;
   align-items: center;
@@ -744,27 +761,33 @@ export default {
   line-height: 1.6;
   resize: none;
 }
+
 :deep(.ds-input .el-textarea) {
   background: transparent !important;
 }
+
 :deep(.ds-input .el-input__wrapper) {
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
   padding: 0 !important;
 }
+
 :deep(.ds-input .el-textarea__inner)::-webkit-scrollbar {
   width: 6px;
   background: transparent;
 }
+
 :deep(.ds-input .el-textarea__inner)::-webkit-scrollbar-thumb {
   background: #c1c5cc;
   border-radius: 6px;
   min-height: 24px;
 }
+
 :deep(.ds-input .el-textarea__inner)::-webkit-scrollbar-thumb:hover {
   background: #a3a7b3;
 }
+
 :deep(.ds-input .el-textarea__inner)::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 6px;
