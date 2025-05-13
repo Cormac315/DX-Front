@@ -19,4 +19,4 @@ npm run serve
 
 ## DEMO
 
-[洞玄前端演示](https://dx.cormac.top/)
+[洞玄前端演示（需要魔法）](https://dx.cormac.top/)
