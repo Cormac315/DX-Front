@@ -23,3 +23,4 @@ npm run serve
 ## DEMO
 
 [洞玄前端演示（需要魔法）](https://dx.cormac.top/)
+[洞玄前端演示2（国内访问）](https://dx.cormac.site/)
