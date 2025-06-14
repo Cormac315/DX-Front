@@ -1,5 +1,5 @@
 # 洞玄系统前端页面
-
+本仓库源代码已经过时
 ## 本地部署
 
 克隆本仓库
@@ -22,6 +22,4 @@ npm run serve
 
 ## DEMO
 
-[洞玄前端演示（需要魔法）](https://dx.cormac.top/)
-
-[洞玄前端演示2（国内访问）](https://dx.cormac.site/)
+[洞玄前端演示](https://dx.cormac.top/)
